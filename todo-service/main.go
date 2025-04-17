@@ -1,7 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"database/sql"
+	"fmt"
+	"github.com/D7NAMITE/todo-application.git/config"
+	"github.com/go-chi/chi/v5"
+	"net/http"
+)
 
 func main() {
-	fmt.Println("Air")
+	cfg := config.LoadConfig()
+	router := chi.NewRouter()
+
+	todoHandler := handlers.todo
 }
