@@ -1,5 +1,3 @@
--- +goose Up
--- +goose StatementBegin
 CREATE TABLE "users" (
                          user_id uuid DEFAULT gen_random_uuid (),
                          username VARCHAR NOT NULL UNIQUE,
@@ -8,9 +6,7 @@ CREATE TABLE "users" (
                          updated_at TIMESTAMP DEFAULT NOW(),
                          PRIMARY KEY (user_id)
 );
--- +goose StatementEnd
 
--- +goose StatementBegin
 CREATE TABLE "todos" (
                          todo_id uuid DEFAULT gen_random_uuid (),
                          user_id uuid REFERENCES "users" (user_id),
@@ -21,4 +17,3 @@ CREATE TABLE "todos" (
                          updated_at TIMESTAMP DEFAULT NOW(),
                          PRIMARY KEY (todo_id)
 );
--- +goose StatementEnd

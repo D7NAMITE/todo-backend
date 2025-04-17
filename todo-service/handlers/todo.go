@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"github.com/D7NAMITE/todo-application.git/db"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -26,19 +27,17 @@ func NewTodoHandler(
 
 func (h *TodoHandler) HandlGetTodoByUserid(w http.ResponseWriter, r *http.Request) {
 
-	todo_data, err := db.SearchProjectByParameterQuery(r, h.databaseUrl)
-
+	todo_data, err := db.GetTodoByUserId(chi.URLParam(r, "user_id"), h.databaseUrl)
 	if err != nil {
-		http.Error(w, "Failed to get project", http.StatusInternalServerError)
+		http.Error(w, "Failed to get Todos", http.StatusInternalServerError)
 		return
 	}
 
-	repoJson, err := json.Marshal(todo_data)
-
+	todoJson, err := json.Marshal(todo_data)
 	if err != nil {
 		respondInternalServerError(w, err)
 		return
 	}
 
-	w.Write(repoJson)
+	w.Write(todoJson)
 }

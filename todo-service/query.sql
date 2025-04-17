@@ -1,4 +1,4 @@
 -- name: GetTodoByUid :many
-SELECT *
+SELECT todos.*
 FROM todos
 WHERE user_id = $1;

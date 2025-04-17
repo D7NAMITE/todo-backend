@@ -12,7 +12,7 @@ import (
 )
 
 const getTodoByUid = `-- name: GetTodoByUid :many
-SELECT todo_id, user_id, title, description, status, created_at, updated_at
+SELECT todos.todo_id, todos.user_id, todos.title, todos.description, todos.status, todos.created_at, todos.updated_at
 FROM todos
 WHERE user_id = $1
 `
