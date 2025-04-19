@@ -10,17 +10,21 @@ for example - getting all **todo** for the user, changing **todo** status, and m
 * Air (for hot reloading) (go install github.com/cosmtrek/air@latest)
 
 ## Setup Guide
-1. Install dependencies:
+1. Navigate to `todo-service`
+```bash
+cd todo-service
+```
+2. Install dependencies:
 ```bash
 go mod tidy
 ```
-2. Configure environment variables: \
+3. Configure environment variables: \
 You can change file name `.env.sample` to `.env` and edit the following:
    * `DATABASE_URL`: The URL of the database
    * `GOOSE_DRIVER`: Database provider (the `.env.sample` setted as `postgres`)
    * `GOOSE_DBSTRING`: Database connection string for migrations. In this case we can use the same URL with `DATABASE_URL`
 
-3. Database migrations:
+4. Database migrations:
 ```bash
 # Apply migrations
 goose -dir ${GOOSE_MIGRATION_DIR} ${GOOSE_DRIVER} "${GOOSE_DBSTRING}" up
@@ -29,12 +33,12 @@ goose -dir ${GOOSE_MIGRATION_DIR} ${GOOSE_DRIVER} "${GOOSE_DBSTRING}" up
 goose -dir ${GOOSE_MIGRATION_DIR} ${GOOSE_DRIVER} "${GOOSE_DBSTRING}" status
 ```
 
-4. Generate database code:
+5. Generate database code:
 ```bash
 sqlc generate 
 ```
 
-5. Run the application:
+6. Run the application:
 ```bash
 # Standard run
 go run main.go
