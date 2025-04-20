@@ -1,4 +1,4 @@
--- +goose up
+-- +goose Up
 CREATE TABLE "users" (
                        user_id uuid DEFAULT gen_random_uuid (),
                        username VARCHAR NOT NULL UNIQUE,

@@ -26,9 +26,9 @@ func NewTodoHandler(
 }
 
 func (h *TodoHandler) HandleGetTodoByUserid(w http.ResponseWriter, r *http.Request) {
-
 	todo_data, err := db.GetTodoByUserId(chi.URLParam(r, "user_id"), h.databaseUrl)
 	if err != nil {
+		fmt.Println(err)
 		http.Error(w, "Failed to get Todos", http.StatusInternalServerError)
 		return
 	}
