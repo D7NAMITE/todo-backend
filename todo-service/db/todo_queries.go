@@ -4,18 +4,17 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgtype"
 	"net/http"
 )
 
 type TodoRequest struct {
-	UserID      string  `json:"UserID"`
+	ClerkID     string  `json:"UserID"`
 	Title       string  `json:"Title"`
 	Description *string `json:"Description"`
 	Status      string  `json:"Status"`
 }
 
-func GetTodoByUserId(userid string, databaseUrl string) ([]Todo, error) {
+func GetTodoByClerkID(clerkId string, databaseUrl string) ([]Todo, error) {
 	ctx := context.Background()
 
 	conn, err := pgx.Connect(ctx, databaseUrl)
@@ -24,12 +23,7 @@ func GetTodoByUserId(userid string, databaseUrl string) ([]Todo, error) {
 	}
 	queries := New(conn)
 
-	uuid := pgtype.UUID{}
-	err = uuid.Scan(userid)
-	if err != nil {
-		return []Todo{}, err
-	}
-	return queries.GetTodoByUid(ctx, uuid)
+	return queries.GetTodoByClerkID(ctx, clerkId)
 }
 
 func CreateTodo(r *http.Request, databaseUrl string) error {
@@ -54,14 +48,8 @@ func CreateTodo(r *http.Request, databaseUrl string) error {
 
 	queries := New(conn)
 
-	uuid := pgtype.UUID{}
-	err = uuid.Scan(request.UserID)
-	if err != nil {
-		return err
-	}
-
-	err = queries.CreateTodo(ctx, CreateTodoParams{
-		UserID:      uuid,
+	err = queries.CreateTodoByClerkID(ctx, CreateTodoByClerkIDParams{
+		ClerkID:     request.ClerkID,
 		Title:       request.Title,
 		Description: request.Description,
 		Status:      request.Status,

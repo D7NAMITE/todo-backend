@@ -7,26 +7,24 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const createTodo = `-- name: CreateTodo :exec
+const createTodoByClerkID = `-- name: CreateTodoByClerkID :exec
 INSERT INTO "todos" (user_id, title, description, status, created_at, updated_at)
-VALUES
-    ($1, $2, $3, $4, NOW(), NOW())
+VALUES ((SELECT user_id FROM users WHERE clerk_id = $1),
+        $2, $3, $4, NOW(), NOW())
 `
 
-type CreateTodoParams struct {
-	UserID      pgtype.UUID
+type CreateTodoByClerkIDParams struct {
+	ClerkID     string
 	Title       string
 	Description *string
 	Status      string
 }
 
-func (q *Queries) CreateTodo(ctx context.Context, arg CreateTodoParams) error {
-	_, err := q.db.Exec(ctx, createTodo,
-		arg.UserID,
+func (q *Queries) CreateTodoByClerkID(ctx context.Context, arg CreateTodoByClerkIDParams) error {
+	_, err := q.db.Exec(ctx, createTodoByClerkID,
+		arg.ClerkID,
 		arg.Title,
 		arg.Description,
 		arg.Status,
@@ -34,14 +32,15 @@ func (q *Queries) CreateTodo(ctx context.Context, arg CreateTodoParams) error {
 	return err
 }
 
-const getTodoByUid = `-- name: GetTodoByUid :many
+const getTodoByClerkID = `-- name: GetTodoByClerkID :many
 SELECT todos.todo_id, todos.user_id, todos.title, todos.description, todos.status, todos.created_at, todos.updated_at
 FROM todos
-WHERE user_id = $1
+JOIN users ON todos.user_id = users.user_id
+WHERE users.clerk_id = $1
 `
 
-func (q *Queries) GetTodoByUid(ctx context.Context, userID pgtype.UUID) ([]Todo, error) {
-	rows, err := q.db.Query(ctx, getTodoByUid, userID)
+func (q *Queries) GetTodoByClerkID(ctx context.Context, clerkID string) ([]Todo, error) {
+	rows, err := q.db.Query(ctx, getTodoByClerkID, clerkID)
 	if err != nil {
 		return nil, err
 	}

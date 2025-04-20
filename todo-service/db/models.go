@@ -20,8 +20,7 @@ type Todo struct {
 
 type User struct {
 	UserID    pgtype.UUID
-	Username  string
-	Password  string
+	ClerkID   string
 	CreatedAt pgtype.Timestamp
 	UpdatedAt pgtype.Timestamp
 }

@@ -16,7 +16,7 @@ func main() {
 	)
 
 	router.Route("/todo", func(r chi.Router) {
-		r.Get("/user/{user_id}", todoHandler.HandleGetTodoByUserid)
+		r.Get("/user/{clerk_id}", todoHandler.HandleGetTodoByClerkID)
 		r.Post("/new", todoHandler.HandlerCreateTodo)
 	})
 
