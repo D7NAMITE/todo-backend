@@ -10,17 +10,10 @@ import (
 
 type Todo struct {
 	TodoID      pgtype.UUID
-	UserID      pgtype.UUID
+	ClerkID     string
 	Title       string
 	Description *string
 	Status      string
 	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
-}
-
-type User struct {
-	UserID    pgtype.UUID
-	ClerkID   string
-	CreatedAt pgtype.Timestamp
-	UpdatedAt pgtype.Timestamp
 }

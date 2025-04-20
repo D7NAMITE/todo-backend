@@ -10,9 +10,8 @@ import (
 )
 
 const createTodoByClerkID = `-- name: CreateTodoByClerkID :exec
-INSERT INTO "todos" (user_id, title, description, status, created_at, updated_at)
-VALUES ((SELECT user_id FROM users WHERE clerk_id = $1),
-        $2, $3, $4, NOW(), NOW())
+INSERT INTO "todos" (clerk_id, title, description, status, created_at, updated_at)
+VALUES ($1, $2, $3, $4, NOW(), NOW())
 `
 
 type CreateTodoByClerkIDParams struct {
@@ -33,10 +32,9 @@ func (q *Queries) CreateTodoByClerkID(ctx context.Context, arg CreateTodoByClerk
 }
 
 const getTodoByClerkID = `-- name: GetTodoByClerkID :many
-SELECT todos.todo_id, todos.user_id, todos.title, todos.description, todos.status, todos.created_at, todos.updated_at
+SELECT todos.todo_id, todos.clerk_id, todos.title, todos.description, todos.status, todos.created_at, todos.updated_at
 FROM todos
-JOIN users ON todos.user_id = users.user_id
-WHERE users.clerk_id = $1
+WHERE todos.clerk_id = $1
 `
 
 func (q *Queries) GetTodoByClerkID(ctx context.Context, clerkID string) ([]Todo, error) {
@@ -50,7 +48,7 @@ func (q *Queries) GetTodoByClerkID(ctx context.Context, clerkID string) ([]Todo,
 		var i Todo
 		if err := rows.Scan(
 			&i.TodoID,
-			&i.UserID,
+			&i.ClerkID,
 			&i.Title,
 			&i.Description,
 			&i.Status,
