@@ -7,6 +7,8 @@ package db
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createTodoByClerkID = `-- name: CreateTodoByClerkID :exec
@@ -28,6 +30,16 @@ func (q *Queries) CreateTodoByClerkID(ctx context.Context, arg CreateTodoByClerk
 		arg.Description,
 		arg.Status,
 	)
+	return err
+}
+
+const deleteTodoByTodoID = `-- name: DeleteTodoByTodoID :exec
+DELETE FROM "todos"
+WHERE todo_id = $1
+`
+
+func (q *Queries) DeleteTodoByTodoID(ctx context.Context, todoID pgtype.UUID) error {
+	_, err := q.db.Exec(ctx, deleteTodoByTodoID, todoID)
 	return err
 }
 

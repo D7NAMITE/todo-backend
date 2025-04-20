@@ -52,3 +52,15 @@ func (h *TodoHandler) HandlerCreateTodo(w http.ResponseWriter, r *http.Request) 
 
 	w.WriteHeader(http.StatusOK)
 }
+
+func (h *TodoHandler) HandlerDeleteTodo(w http.ResponseWriter, r *http.Request) {
+
+	err := db.DeleteTodo(r, h.databaseUrl)
+
+	if err != nil {
+		respondInternalServerError(w, err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
