@@ -76,3 +76,31 @@ func (q *Queries) GetTodoByClerkID(ctx context.Context, clerkID string) ([]Todo,
 	}
 	return items, nil
 }
+
+const updateTodoByTodoID = `-- name: UpdateTodoByTodoID :exec
+UPDATE "todos"
+SET
+    title = COALESCE($1, title),
+    description = COALESCE($2, description),
+    status = COALESCE($3, status),
+    updated_at = NOW()
+WHERE
+    todo_id = $4
+`
+
+type UpdateTodoByTodoIDParams struct {
+	Title       string
+	Description *string
+	Status      string
+	TodoID      pgtype.UUID
+}
+
+func (q *Queries) UpdateTodoByTodoID(ctx context.Context, arg UpdateTodoByTodoIDParams) error {
+	_, err := q.db.Exec(ctx, updateTodoByTodoID,
+		arg.Title,
+		arg.Description,
+		arg.Status,
+		arg.TodoID,
+	)
+	return err
+}

@@ -64,3 +64,15 @@ func (h *TodoHandler) HandlerDeleteTodo(w http.ResponseWriter, r *http.Request) 
 
 	w.WriteHeader(http.StatusOK)
 }
+
+func (h *TodoHandler) HandlerUpdateTodo(w http.ResponseWriter, r *http.Request) {
+
+	err := db.UpdateTodo(r, h.databaseUrl)
+
+	if err != nil {
+		respondInternalServerError(w, err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}

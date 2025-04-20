@@ -19,6 +19,13 @@ type DeleteTodoRequest struct {
 	TodoID string `json:"TodoID"`
 }
 
+type UpdateTodoRequest struct {
+	TodoID      string  `json:"TodoID"`
+	Title       string  `json:"Title"`
+	Description *string `json:"Description"`
+	Status      string  `json:"Status"`
+}
+
 func GetTodoByClerkID(clerkId string, databaseUrl string) ([]Todo, error) {
 	ctx := context.Background()
 
@@ -96,6 +103,48 @@ func DeleteTodo(r *http.Request, databaseUrl string) error {
 	}
 
 	err = queries.DeleteTodoByTodoID(ctx, tuid)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func UpdateTodo(r *http.Request, databaseUrl string) error {
+	ctx := context.Background()
+
+	var request UpdateTodoRequest
+	err := json.NewDecoder(r.Body).Decode(&request)
+	if err != nil {
+		return err
+	}
+
+	conn, err := pgx.Connect(ctx, databaseUrl)
+	if err != nil {
+		return err
+	}
+
+	defer func(conn *pgx.Conn, ctx context.Context) {
+		err := conn.Close(ctx)
+		if err != nil {
+		}
+	}(conn, ctx)
+
+	queries := New(conn)
+
+	tuid := pgtype.UUID{}
+	err = tuid.Scan(request.TodoID)
+	if err != nil {
+		return err
+	}
+
+	err = queries.UpdateTodoByTodoID(ctx, UpdateTodoByTodoIDParams{
+		TodoID:      tuid,
+		Title:       request.Title,
+		Description: request.Description,
+		Status:      request.Status,
+	})
 
 	if err != nil {
 		return err

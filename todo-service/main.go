@@ -19,6 +19,7 @@ func main() {
 		r.Get("/user/{clerk_id}", todoHandler.HandleGetTodoByClerkID)
 		r.Post("/new", todoHandler.HandlerCreateTodo)
 		r.Post("/delete", todoHandler.HandlerDeleteTodo)
+		r.Post("/update", todoHandler.HandlerUpdateTodo)
 	})
 
 	http.ListenAndServe(":8080", router)
