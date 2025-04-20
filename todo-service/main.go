@@ -16,7 +16,8 @@ func main() {
 	)
 
 	router.Route("/todo", func(r chi.Router) {
-		r.Get("/user/{user_id}", todoHandler.HandlGetTodoByUserid)
+		r.Get("/user/{user_id}", todoHandler.HandleGetTodoByUserid)
+		r.Post("/new", todoHandler.HandlerCreateTodo)
 	})
 
 	http.ListenAndServe(":8080", router)

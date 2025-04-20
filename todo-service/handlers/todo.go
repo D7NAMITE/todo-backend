@@ -25,7 +25,7 @@ func NewTodoHandler(
 	}
 }
 
-func (h *TodoHandler) HandlGetTodoByUserid(w http.ResponseWriter, r *http.Request) {
+func (h *TodoHandler) HandleGetTodoByUserid(w http.ResponseWriter, r *http.Request) {
 
 	todo_data, err := db.GetTodoByUserId(chi.URLParam(r, "user_id"), h.databaseUrl)
 	if err != nil {
@@ -40,4 +40,16 @@ func (h *TodoHandler) HandlGetTodoByUserid(w http.ResponseWriter, r *http.Reques
 	}
 
 	w.Write(todoJson)
+}
+
+func (h *TodoHandler) HandlerCreateTodo(w http.ResponseWriter, r *http.Request) {
+
+	err := db.CreateTodo(r, h.databaseUrl)
+
+	if err != nil {
+		respondInternalServerError(w, err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
